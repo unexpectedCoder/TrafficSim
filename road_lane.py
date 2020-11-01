@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 
 from car import Car
+from ex import ValueExpectedException
 
 
 class RoadLane:
@@ -15,10 +16,12 @@ class RoadLane:
     Методы:
        * addCar -- добавить машину на полосу;
        * rmCar -- убрать машину с полосы;
-       * show -- вывести на экран (пока чисто для отладки).
+       * show -- вывести на экран (отладочный метод).
+    Переопределённые методы:
+       * __repr__.
     """
 
-    _states = pd.Series(data=[0, 1], index=['empty', 'full'], dtype=pd.Int8Dtype)
+    _states = pd.Series(data=[0, 1], index=['empty', 'full'], dtype=pd.BooleanDtype)
 
     def __init__(self, capacity: int, cars: List[Car] = None):
         self._checkCapacity(capacity)
@@ -27,20 +30,22 @@ class RoadLane:
         self._cars = cars
 
         self._initCells()
-
-    def _initCells(self):
-        if self._cars:
+        if cars:
             self._updateCells()
 
-    def _updateCells(self):
+    def _initCells(self):
         self._cells = np.full(self.capacity, self.possibleStates['empty'])
+
+    def _updateCells(self):
         for car in self._cars:
             if car.pos < self.capacity:
                 self._cells[car.pos] = self.possibleStates['full']
+            else:
+                self._cars.remove(car)
 
     def _checkCapacity(self, cap: int):
-        if cap <= 0:
-            raise ValueError(f"\tОшибка: {self.__class__.__name__}.capacity должна быть > 0!")
+        if cap < 1:
+            raise ValueExpectedException("capacity > 0", f"{cap}", src=self._checkCapacity.__name__)
 
     def __repr__(self):
         return f"{self.__class__.__name__}:\n" \
@@ -49,14 +54,17 @@ class RoadLane:
 
     @property
     def possibleStates(self) -> pd.Series:
+        """Список возможных состояний клеток полосы."""
         return self._states
 
     @property
     def capacity(self) -> int:
+        """Ёмкость полосы (максимальное количество объектов транспорта)."""
         return self._capacity
 
     @property
     def cells(self) -> np.ndarray:
+        """Массив клеток полосы (текущее состояние полосы)."""
         return self._cells
 
     def addCar(self, car: Car, pos: int = 0) -> bool:
@@ -81,7 +89,7 @@ class RoadLane:
         self._cars.remove(car)
 
     def show(self):
-        # Для отладки в основном
+        """Вспомогательный (отладочный) метод отрисовки состояния полосы."""
         import matplotlib.pyplot as plt
 
         positions = np.array([car.pos for car in self._cars])
