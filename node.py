@@ -1,6 +1,7 @@
 from abc import ABC
 
 
+# TODO заполнить методы
 class Node(ABC):
     def __hash__(self):
         pass
