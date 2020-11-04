@@ -2,18 +2,20 @@ import numpy as np
 
 from ex import ValueExpectedException
 from car import Car
-from road_lane import RoadLane
+from road import Road
 
 
 def test_init():
     try:
-        RoadLane(0)
+        Road(1, 2, -30, [])
         assert False
     except ValueExpectedException as ex:
         print()
         print(ex.message)
         assert True
 
+
+# TODO исправить все тесты ниже
 
 def test_capacity():
     rl = RoadLane()

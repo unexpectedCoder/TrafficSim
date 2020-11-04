@@ -6,9 +6,9 @@ from ex import ValueExpectedException
 
 def test_init():
     try:
-        Car(10)
+        Car(pos=(1, 2))
         assert True
-        Car(-1)
+        Car((-1, 2))
         assert False
     except ValueExpectedException as ex:
         print()
@@ -17,16 +17,10 @@ def test_init():
 
 
 def test_eq():
-    c1 = Car(1)
+    c1 = Car((1, 2))
     c2 = c1.copy()
     assert c1 == c2
-    c2.pos = 7
+    c2.pos = (1, 7)
     assert c1 == c2
     c2.uuid = uuid4()
     assert c1 != c2
-
-
-def test_repr():
-    print()
-    print(Car(5))   # см. вывод в консоли
-    assert True
