@@ -1,16 +1,4 @@
-from car import Car
-from road_lane import RoadLane
-
-
 def main():
-    print(Car())
-
-    n_cars = 10
-    cars = [Car(i) for i in range(0, 2*n_cars, 2)]
-    roadLane = RoadLane(30, cars)
-    roadLane.show()
-    print(roadLane)
-
     return 0
 
 
