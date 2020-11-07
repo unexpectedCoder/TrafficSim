@@ -2,12 +2,26 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 from ex import ValueExpectedException
-from edge import Edge
+from abstract import Edge
 from car import Car
 
 
 class Road(Edge):
-    """Класс дороги."""
+    """Класс дороги.
+
+    Свойства:
+       * *possible_states* -- возможные состояния ячеек дороги;
+       * *cars* (имеет setter) -- список всех машин на дороге;
+       * *lane_capacity* (имеет setter) -- вместимость каждой полосы дороги;
+       * *cells* -- текущий массив (матрица) ячеек дороги;
+       * *n_lanes* (имеет setter) -- количество полос на дороге.
+    Методы:
+       * *update* -- обновить состояние дороги как клеточного автомата;
+       * *addCar* -- добавить объект ``Car`` в заданную позицию на дороге;
+       * *rmCar* -- удалить указанный объект ``Car`` из списка машин на дороге.
+    Переопределяет:
+       * *__repr__*.
+    """
     _states = {'empty': 0, 'full': 1}
 
     def __init__(self, fr: int, to: int, lane_capacity: int, cars: List[Car],
@@ -145,10 +159,6 @@ class Road(Edge):
         """
         self.cars.remove(car)
         self._update_cells()
-
-    def show(self):
-        """Вспомогательный (отладочный) метод отрисовки состояния полосы."""
-        pass
 
 
 if __name__ == '__main__':

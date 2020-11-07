@@ -1,5 +1,6 @@
-from typing import Tuple, Union
+from typing import Iterable, Union
 from uuid import uuid4, UUID
+import numpy as np
 
 from ex import ValueExpectedException
 
@@ -18,7 +19,7 @@ class Car:
        * __eq__ -- сравниваются ``uuid`` двух экземпляров.
     """
 
-    def __init__(self, pos: Tuple[int, int] = (0, 0), uuid: UUID = None, name: str = None):
+    def __init__(self, pos: Union[Iterable, np.ndarray] = (0, 0), uuid: UUID = None, name: str = None):
         self.pos = pos
         self.uuid = uuid if uuid else uuid4()
         self.name = name
@@ -39,19 +40,20 @@ class Car:
         return Car(self.pos, self.uuid)
 
     @property
-    def pos(self) -> Tuple[int, int]:
+    def pos(self) -> np.ndarray:
         """Текущая позиция (индекс клетки) экземпляра. Здесь строки -- это полосы."""
         return self._pos
 
     @pos.setter
-    def pos(self, new: Tuple[int, int]):
+    def pos(self, new: np.ndarray):
+        if not isinstance(new, np.ndarray):
+            new = np.array(new)
         self._checkPos(new)
-        self._pos = new
+        self._pos = new.copy()
 
-    def _checkPos(self, pos: Tuple[int, int]):
-        for p in pos:
-            if p < 0:
-                raise ValueExpectedException("pos value >= 0", f"pos value = {pos}", src=self.__class__.__name__)
+    def _checkPos(self, pos: np.ndarray):
+        if np.any(pos < 0):
+            raise ValueExpectedException("все значения pos >= 0", f"значения pos = {pos}", src=self.__class__.__name__)
 
     @property
     def uuid(self) -> UUID:

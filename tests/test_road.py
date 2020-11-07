@@ -15,37 +15,35 @@ def test_init():
         assert True
 
 
-# TODO исправить все тесты ниже
-
 def test_capacity():
-    rl = RoadLane()
-    assert rl.capacity == 1
-    rl.capacity = 7
-    assert rl.capacity == 7
+    r = Road(1, 2, 30, [])
+    assert r.lane_capacity == 30
+    r.lane_capacity = 7
+    assert r.lane_capacity == 7
 
 
 def test_add():
-    rl = RoadLane(3, [Car(1)])
-    assert np.all(rl.cells == [0, 1, 0])
-    rl.addCar(Car(10))
-    assert np.all(rl.cells == [1, 1, 0])
-    rl.addCar(Car(70), pos=2)
-    assert np.all(rl.cells == [1, 1, 1])
+    r = Road(1, 2, 3, [Car((0, 1))])
+    assert np.all(r.cells == [0, 1, 0])
+    r.addCar(Car(), pos=(0, 2))
+    assert np.all(r.cells == [0, 1, 1])
+    r.addCar(Car())
+    assert np.all(r.cells == [1, 1, 1])
 
 
 def test_rm():
-    c1, c2, c3 = Car(), Car(1), Car(2)
-    rl = RoadLane(3, [c1, c2, c3])
-    assert np.all(rl.cells == [1, 1, 1])
-    rl.rmCar(c2)
-    assert np.all(rl.cells == [1, 0, 1])
+    c1, c2, c3 = Car(), Car((0, 1)), Car((0, 2))
+    r = Road(1, 2, 3, [c1, c2, c3])
+    assert np.all(r.cells == [1, 1, 1])
+    r.rmCar(c2)
+    assert np.all(r.cells == [1, 0, 1])
 
 
 def test_update():
-    rl = RoadLane(3, [Car()])
-    assert np.all(rl.cells == [1, 0, 0])
-    rl.update()
-    assert np.all(rl.cells == [0, 1, 0])
-    rl.update()
-    assert np.all(rl.cells == [0, 0, 1])
+    r = Road(1, 2, 3, [Car()])
+    assert np.all(r.cells == [1, 0, 0])
+    r.update()
+    assert np.all(r.cells == [0, 1, 0])
+    r.update()
+    assert np.all(r.cells == [0, 0, 1])
     # TODO тест случая, когда машина "выходит" с дороги (pos > capacity)

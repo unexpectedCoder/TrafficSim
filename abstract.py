@@ -1,11 +1,53 @@
 from abc import ABC
-from typing import Tuple, Union
 from uuid import UUID, uuid4
-
+from typing import Tuple, Union
 from ex import ValueExpectedException
 
 
+class Node(ABC):
+    """Абстрактный класс узла графа.
+
+    Свойства:
+       * *uuid* -- возвращает UUID.
+    Переопределяет:
+       * *__hash__* -- возвращает UUID;
+       * *__eq__* -- сравнивает UUID.
+    """
+
+    def __init__(self, uuid: UUID = None):
+        self._uuid = uuid if uuid else uuid4()
+
+    def __hash__(self):
+        return self._uuid
+
+    def __eq__(self, other):
+        return self.uuid == other.uuid
+
+    @property
+    def uuid(self) -> UUID:
+        """UUID узла графа."""
+        return self._uuid
+
+
 class Edge(ABC):
+    """Ребро графа.
+
+    Ребро направлено от узла *u* к узлу *v*.
+
+    Свойства:
+       * *uv* (имеет setter) -- кортеж вида ``(u, v)``;
+       * *name* (имеет setter) -- название ребра;
+       * *weight* (имеет setter) -- вес ребра;
+       * *color* (имеет setter) -- цвет ребра;
+       * *uuid* -- UUID ребра.
+    Методы:
+       * *is_equal_to* -- проверить на равенство вес ребра весу другого ребра.
+    Переопределяет:
+       * *__hash__* -- возвращает UUID ребра;
+       * *__eq__* -- сравнивает UUID двух рёбер;
+       * *__repr__*.
+    """
+
     def __init__(self, u: int, v: int, **kwargs):
         self.uv = u, v
         self.name = kwargs['name'] if 'name' in kwargs else None
@@ -24,9 +66,12 @@ class Edge(ABC):
     def __hash__(self):
         return self.uuid
 
+    def __eq__(self, other: 'Edge'):
+        return self.uuid == other.uuid
+
     @property
     def uv(self) -> Tuple[int, int]:
-        """Направление ребра -- от ``u`` к ``v``."""
+        """Направление ребра от ``u`` к ``v``."""
         return self._u, self._v
 
     @uv.setter
@@ -81,7 +126,7 @@ class Edge(ABC):
         return self._uuid
 
     def is_equal_to(self, other: 'Edge') -> bool:
-        """Проверить на равенство веса ребра весу другого ребра.
+        """Проверить на равенство вес ребра весу другого ребра.
 
         :param other: другое ребро.
         :return: Веса рёбер равны (*True*) или нет (*False*).
