@@ -8,14 +8,16 @@ class Node(ABC):
     """Абстрактный класс узла графа.
 
     Свойства:
-       * *uuid* -- возвращает UUID.
+       * *uuid* -- возвращает UUID;
+       * *color* -- цвет узла.
     Переопределяет:
        * *__hash__* -- возвращает UUID;
        * *__eq__* -- сравнивает UUID.
     """
 
-    def __init__(self, uuid: UUID = None):
+    def __init__(self, uuid: UUID = None, **kwargs):
         self._uuid = uuid if uuid else uuid4()
+        self._color = kwargs['color'] if 'color' in kwargs else (0, 0, 0)
 
     def __hash__(self):
         return self._uuid
@@ -27,6 +29,15 @@ class Node(ABC):
     def uuid(self) -> UUID:
         """UUID узла графа."""
         return self._uuid
+
+    @property
+    def color(self) -> Tuple[int, int, int]:
+        """Цвет узла."""
+        return self._color
+
+    @color.setter
+    def color(self, c: Tuple[int, int, int]):
+        self._color = c
 
 
 class Edge(ABC):
