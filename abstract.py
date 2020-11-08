@@ -15,7 +15,7 @@ class Node(ABC):
        * *__eq__* -- сравнивает ID.
     """
     def __init__(self, **kwargs):
-        self._id = kwargs['uuid'] if 'uuid' in kwargs else uuid4().int
+        self._id = kwargs['id'] if 'id' in kwargs else uuid4().int
         self._color = kwargs['color'] if 'color' in kwargs else (0, 0, 0)
 
     def __hash__(self):
@@ -63,7 +63,7 @@ class Edge(ABC):
         self.name = kwargs['name'] if 'name' in kwargs else None
         self.weight = kwargs['weight'] if 'weight' in kwargs else 0
         self.color = kwargs['color'] if 'color' in kwargs else (0, 0, 0)
-        self._id = kwargs['uuid'] if 'uuid' in kwargs else uuid4().int
+        self._id = kwargs['id'] if 'id' in kwargs else uuid4().int
 
     def __repr__(self):
         return f"{self.__class__.__name__}:\n" \

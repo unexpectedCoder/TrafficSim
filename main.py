@@ -1,19 +1,19 @@
-from typing import Iterable
-from crossroad import Crossroad
+import random
+
 from road_net import RoadNet
 
 
 def main():
-    rng_crossr = range(0, 20)
-
-    crossroads = init_crossroads(rng_crossr)
-    rn = RoadNet(crossroads)
+    edges = init_nodes(20)
+    rn = RoadNet(edges)
+    rn.show()
 
     return 0
 
 
-def init_crossroads(rng: Iterable) -> Iterable:
-    return [Crossroad(uuid=i) for i in rng]
+def init_nodes(n: int):
+    return [(i, i+1, {'weight': random.randint(1, 10)})
+            for i in range(n)]
 
 
 if __name__ == '__main__':
