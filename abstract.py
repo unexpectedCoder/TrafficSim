@@ -1,5 +1,5 @@
 from abc import ABC
-from uuid import UUID, uuid4
+from uuid import uuid4
 from typing import Tuple, Union
 from ex import ValueExpectedException
 
@@ -8,27 +8,26 @@ class Node(ABC):
     """Абстрактный класс узла графа.
 
     Свойства:
-       * *uuid* -- возвращает UUID;
+       * *id* -- возвращает целочисленный номер;
        * *color* -- цвет узла.
     Переопределяет:
-       * *__hash__* -- возвращает UUID;
-       * *__eq__* -- сравнивает UUID.
+       * *__hash__* -- возвращает ID;
+       * *__eq__* -- сравнивает ID.
     """
-
-    def __init__(self, uuid: UUID = None, **kwargs):
-        self._uuid = uuid if uuid else uuid4()
+    def __init__(self, **kwargs):
+        self._id = kwargs['uuid'] if 'uuid' in kwargs else uuid4().int
         self._color = kwargs['color'] if 'color' in kwargs else (0, 0, 0)
 
     def __hash__(self):
-        return self._uuid
+        return self.id
 
     def __eq__(self, other):
-        return self.uuid == other.uuid
+        return self.id == other.id
 
     @property
-    def uuid(self) -> UUID:
-        """UUID узла графа."""
-        return self._uuid
+    def id(self) -> int:
+        """ID узла графа."""
+        return self._id
 
     @property
     def color(self) -> Tuple[int, int, int]:
@@ -50,7 +49,7 @@ class Edge(ABC):
        * *name* (имеет setter) -- название ребра;
        * *weight* (имеет setter) -- вес ребра;
        * *color* (имеет setter) -- цвет ребра;
-       * *uuid* -- UUID ребра.
+       * *id* -- ID ребра.
     Методы:
        * *is_equal_to* -- проверить на равенство вес ребра весу другого ребра.
     Переопределяет:
@@ -64,7 +63,7 @@ class Edge(ABC):
         self.name = kwargs['name'] if 'name' in kwargs else None
         self.weight = kwargs['weight'] if 'weight' in kwargs else 0
         self.color = kwargs['color'] if 'color' in kwargs else (0, 0, 0)
-        self._uuid = kwargs['uuid'] if 'uuid' in kwargs else uuid4()
+        self._id = kwargs['uuid'] if 'uuid' in kwargs else uuid4().int
 
     def __repr__(self):
         return f"{self.__class__.__name__}:\n" \
@@ -72,13 +71,13 @@ class Edge(ABC):
                f" * name: {self.name}\n" \
                f" * weight: {self.weight}\n" \
                f" * color (RGB): {self.color}\n" \
-               f" * uuid: {self.uuid}"
+               f" * id: {self.id}"
 
     def __hash__(self):
-        return self.uuid
+        return self.id
 
     def __eq__(self, other: 'Edge'):
-        return self.uuid == other.uuid
+        return self.id == other.id
 
     @property
     def uv(self) -> Tuple[int, int]:
@@ -132,9 +131,9 @@ class Edge(ABC):
                 raise ValueExpectedException("color value [0; 255]", f"color value {x}", src=self.__class__.__name__)
 
     @property
-    def uuid(self) -> UUID:
-        """UUID ребра."""
-        return self._uuid
+    def id(self) -> int:
+        """ID ребра."""
+        return self._id
 
     def is_equal_to(self, other: 'Edge') -> bool:
         """Проверить на равенство вес ребра весу другого ребра.
